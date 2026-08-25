@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendaê — Etapa 15.1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#172033}
+.app{max-width:430px;margin:auto;min-height:100vh;background:white}
+header{padding:24px 20px 14px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:800}.logo span{color:#6c5ce7}
+main{padding:20px}.card{background:#fff;border:1px solid #e8eaf0;border-radius:18px;padding:20px;box-shadow:0 5px 20px rgba(20,30,60,.05);margin-bottom:16px}
+h1{font-size:26px;margin:0 0 8px}h2{font-size:19px;margin:0 0 14px}p{color:#667085;line-height:1.5}
+label{display:block;font-size:13px;font-weight:700;margin:14px 0 6px}input,button{width:100%;padding:13px;border-radius:12px;font-size:15px}input{border:1px solid #dfe3eb}button{border:0;background:#6c5ce7;color:white;font-weight:700;cursor:pointer;margin-top:14px}.secondary{background:#eef0ff;color:#5547c7}.link{background:none;color:#6c5ce7;margin-top:8px}.hidden{display:none}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{padding:16px;border-radius:15px;background:#f7f7ff}.stat b{display:block;font-size:24px}.nav{display:flex;gap:8px;overflow:auto;padding:12px 0}.nav button{white-space:nowrap;width:auto;margin:0;padding:10px 14px}.success{background:#eaf8ef;color:#20743b;padding:12px;border-radius:12px;margin-bottom:14px;font-size:14px}.error{background:#fff0f0;color:#a62b2b;padding:12px;border-radius:12px;margin-bottom:14px;font-size:14px}
+small{color:#8a93a3}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">Agenda<span>ê</span></div><button id="logout" class="secondary hidden" style="width:auto;margin:0">Sair</button></header>
+<main>
+<section id="auth">
+<div class="card">
+<h1 id="authTitle">Entrar</h1><p id="authSub">Acesse o painel do seu negócio.</p>
+<div id="msg"></div>
+<form id="form">
+<div id="nameBox" class="hidden"><label>Seu nome</label><input id="name" autocomplete="name"></div>
+<label>E-mail</label><input id="email" type="email" required autocomplete="email">
+<label>Senha</label><input id="password" type="password" required minlength="6" autocomplete="current-password">
+<div id="businessBox" class="hidden"><label>Nome do negócio</label><input id="business"></div>
+<button type="submit" id="submit">Entrar</button>
+</form>
+<button class="link" id="toggle">Ainda não tenho conta</button>
+</div>
+</section>
+
+<section id="dashboard" class="hidden">
+<div class="card">
+<small>Bem-vindo(a)</small><h1 id="welcome"></h1><p id="businessName"></p>
+<div class="success">Sua conta está pronta para começar a configurar o Agendaê.</div>
+<div class="grid">
+<div class="stat"><small>Agendamentos hoje</small><b>0</b></div>
+<div class="stat"><small>Clientes</small><b>0</b></div>
+</div>
+</div>
+<div class="card"><h2>Próximos passos</h2>
+<div class="nav">
+<button>📅 Agenda</button><button>👥 Clientes</button><button>🛠 Serviços</button><button>⚙️ Configurações</button>
+</div>
+<p><b>Etapa 15.1:</b> cadastro e login estão funcionando neste protótipo. O próximo passo é conectar a autenticação a um banco de dados real.</p>
+</div>
+</section>
+</main>
+</div>
+<script>
+let signup=false;
+const $=id=>document.getElementById(id);
+function render(){ $("authTitle").textContent=signup?"Criar conta":"Entrar"; $("authSub").textContent=signup?"Crie a conta do seu negócio no Agendaê.":"Acesse o painel do seu negócio."; $("nameBox").classList.toggle("hidden",!signup); $("businessBox").classList.toggle("hidden",!signup); $("submit").textContent=signup?"Criar minha conta":"Entrar"; $("toggle").textContent=signup?"Já tenho uma conta":"Ainda não tenho conta"; }
+$("toggle").onclick=()=>{signup=!signup;$("msg").innerHTML="";render()};
+$("form").onsubmit=e=>{
+e.preventDefault(); let email=$("email").value.trim().toLowerCase(), pass=$("password").value;
+let users=JSON.parse(localStorage.getItem("agendae_users")||"{}");
+if(signup){
+ if(users[email]) return $("msg").innerHTML='<div class="error">Este e-mail já está cadastrado.</div>';
+ users[email]={name:$("name").value.trim()||"Profissional",business:$("business").value.trim()||"Meu negócio",password:pass};
+ localStorage.setItem("agendae_users",JSON.stringify(users)); localStorage.setItem("agendae_session",email); show();
+}else{
+ if(!users[email]||users[email].password!==pass) return $("msg").innerHTML='<div class="error">E-mail ou senha incorretos.</div>';
+ localStorage.setItem("agendae_session",email); show();
+}};
+function show(){
+let email=localStorage.getItem("agendae_session"), users=JSON.parse(localStorage.getItem("agendae_users")||"{}"),u=users[email];
+if(!u)return;
+$("auth").classList.add("hidden");$("dashboard").classList.remove("hidden");$("logout").classList.remove("hidden");
+$("welcome").textContent=u.name;$("businessName").textContent=u.business;
+}
+$("logout").onclick=()=>{localStorage.removeItem("agendae_session");location.reload()};
+render(); if(localStorage.getItem("agendae_session"))show();
+</script>
+</body>
+</html>
