@@ -53,29 +53,165 @@ small{color:#8a93a3}
 </main>
 </div>
 <script>
-let signup=false;
-const $=id=>document.getElementById(id);
-function render(){ $("authTitle").textContent=signup?"Criar conta":"Entrar"; $("authSub").textContent=signup?"Crie a conta do seu negócio no Agendaê.":"Acesse o painel do seu negócio."; $("nameBox").classList.toggle("hidden",!signup); $("businessBox").classList.toggle("hidden",!signup); $("submit").textContent=signup?"Criar minha conta":"Entrar"; $("toggle").textContent=signup?"Já tenho uma conta":"Ainda não tenho conta"; }
-$("toggle").onclick=()=>{signup=!signup;$("msg").innerHTML="";render()};
-$("form").onsubmit=e=>{
-e.preventDefault(); let email=$("email").value.trim().toLowerCase(), pass=$("password").value;
-let users=JSON.parse(localStorage.getItem("agendae_users")||"{}");
-if(signup){
- if(users[email]) return $("msg").innerHTML='<div class="error">Este e-mail já está cadastrado.</div>';
- users[email]={name:$("name").value.trim()||"Profissional",business:$("business").value.trim()||"Meu negócio",password:pass};
- localStorage.setItem("agendae_users",JSON.stringify(users)); localStorage.setItem("agendae_session",email); show();
-}else{
- if(!users[email]||users[email].password!==pass) return $("msg").innerHTML='<div class="error">E-mail ou senha incorretos.</div>';
- localStorage.setItem("agendae_session",email); show();
-}};
-function show(){
-let email=localStorage.getItem("agendae_session"), users=JSON.parse(localStorage.getItem("agendae_users")||"{}"),u=users[email];
-if(!u)return;
-$("auth").classList.add("hidden");$("dashboard").classList.remove("hidden");$("logout").classList.remove("hidden");
-$("welcome").textContent=u.name;$("businessName").textContent=u.business;
+const SUPABASE_URL = "https://ncmofygtizzbyhgdtsja.supabase.co";
+const SUPABASE_KEY = "sb_publishable_b2OtnFe5ptHHL2pByekItQ_fRC8KEXe";
+
+let supabase;
+
+async function iniciarSupabase() {
+  const { createClient } = await import(
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+  );
+
+  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  render();
+  verificarSessao();
 }
-$("logout").onclick=()=>{localStorage.removeItem("agendae_session");location.reload()};
-render(); if(localStorage.getItem("agendae_session"))show();
+
+const $ = id => document.getElementById(id);
+
+let signup = false;
+
+function render() {
+  const title = $("authTitle");
+  const toggle = $("toggle");
+
+  if (!title || !toggle) return;
+
+  title.textContent = signup ? "Criar conta" : "Entrar";
+
+  toggle.textContent = signup
+    ? "Já tenho uma conta"
+    : "Ainda não tenho uma conta";
+
+  if ($("nameBox")) {
+    $("nameBox").classList.toggle("hidden", !signup);
+  }
+
+  if ($("businessBox")) {
+    $("businessBox").classList.toggle("hidden", !signup);
+  }
+
+  if ($("submit")) {
+    $("submit").textContent = signup ? "Criar conta" : "Entrar";
+  }
+}
+
+$("toggle").onclick = () => {
+  signup = !signup;
+
+  if ($("msg")) {
+    $("msg").textContent = "";
+  }
+
+  render();
+};
+
+$("form").onsubmit = async e => {
+  e.preventDefault();
+
+  const email = $("email").value.trim();
+  const password = $("password").value;
+
+  if (!email || !password) {
+    $("msg").textContent = "Preencha e-mail e senha.";
+    return;
+  }
+
+  $("submit").disabled = true;
+  $("msg").textContent = "Aguarde...";
+
+  try {
+    if (signup) {
+      const name = $("name")?.value.trim() || "";
+      const business = $("business")?.value.trim() || "";
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name: name,
+            business: business
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      $("msg").textContent =
+        "Conta criada! Verifique seu e-mail para confirmar o cadastro.";
+
+    } else {
+      const { data, error } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+      if (error) throw error;
+
+      mostrarDashboard(data.user);
+    }
+
+  } catch (error) {
+    $("msg").textContent = error.message;
+  }
+
+  $("submit").disabled = false;
+};
+
+async function verificarSessao() {
+  const { data } = await supabase.auth.getSession();
+
+  if (data.session) {
+    mostrarDashboard(data.session.user);
+  }
+}
+
+function mostrarDashboard(user) {
+  if ($("auth")) {
+    $("auth").classList.add("hidden");
+  }
+
+  if ($("dashboard")) {
+    $("dashboard").classList.remove("hidden");
+  }
+
+  const nome =
+    user.user_metadata?.name ||
+    user.email?.split("@")[0] ||
+    "Usuário";
+
+  if ($("welcome")) {
+    $("welcome").textContent = nome;
+  }
+
+  if ($("business")) {
+    $("business").textContent =
+      user.user_metadata?.business || "";
+  }
+}
+
+if ($("logout")) {
+  $("logout").onclick = async () => {
+    await supabase.auth.signOut();
+
+    if ($("dashboard")) {
+      $("dashboard").classList.add("hidden");
+    }
+
+    if ($("auth")) {
+      $("auth").classList.remove("hidden");
+    }
+
+    $("form").reset();
+    render();
+  };
+}
+
+iniciarSupabase();
 </script>
 </body>
 </html>
