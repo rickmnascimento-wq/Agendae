@@ -3,51 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Agendaê — Etapa 15.1</title>
+<title>Agendaê</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:#f5f7fb;
-  color:#182033
+  color:#182033;
 }
+
 .app{
   max-width:430px;
   margin:auto;
   min-height:100vh;
-  background:#fff
+  background:#fff;
 }
+
 header{
   padding:22px 20px 10px;
   font-weight:800;
   font-size:25px;
-  color:#635bff
+  color:#635bff;
 }
-main{padding:20px}
+
+main{
+  padding:20px;
+}
+
 .card{
   border:1px solid #e8eaf1;
   border-radius:18px;
   padding:20px;
-  box-shadow:0 8px 25px #141e3c10
+  box-shadow:0 8px 25px #141e3c10;
 }
+
 h1{
   font-size:25px;
-  margin:0 0 8px
+  margin:0 0 8px;
 }
+
+h2{
+  margin-top:0;
+}
+
 p{
   color:#687083;
-  line-height:1.45
+  line-height:1.45;
 }
+
 input{
   width:100%;
   padding:14px 15px;
   margin:7px 0;
   border:1px solid #dfe3ec;
   border-radius:12px;
-  font-size:16px
+  font-size:16px;
 }
+
 button{
   width:100%;
   padding:14px;
@@ -57,56 +74,73 @@ button{
   color:#fff;
   font-size:16px;
   font-weight:700;
-  margin-top:10px
+  margin-top:10px;
 }
+
 .secondary{
   background:#eef0ff;
-  color:#4d46d8
+  color:#4d46d8;
 }
+
 .link{
   background:none;
   color:#635bff;
-  padding:8px
+  padding:8px;
 }
-.hidden{display:none}
+
+.hidden{
+  display:none;
+}
+
 .top{
   display:flex;
   justify-content:space-between;
-  align-items:center
+  align-items:center;
 }
+
 .logout{
   width:auto;
   background:#f1f2f6;
   color:#343a4a;
   padding:9px 12px;
-  margin:0
+  margin:0;
 }
+
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
-  margin-top:18px
+  margin-top:18px;
 }
+
 .tile{
   padding:18px;
   border:1px solid #e8eaf1;
-  border-radius:15px
+  border-radius:15px;
 }
+
 .num{
   font-size:25px;
-  font-weight:800
+  font-weight:800;
 }
+
 .small{
   font-size:13px;
-  color:#7b8292
+  color:#7b8292;
 }
+
 .msg{
   margin-top:12px;
   padding:10px;
   border-radius:10px;
   background:#eef8f1;
   color:#18733b;
-  display:none
+  display:none;
+}
+
+.error{
+  background:#fff0f0;
+  color:#b42318;
 }
 </style>
 </head>
@@ -115,88 +149,93 @@ button{
 
 <div class="app">
 
-<header>Agendaê</header>
+<header>
+  Agendaê
+</header>
 
 <main>
 
+<!-- LOGIN / CADASTRO -->
+
 <section id="auth" class="card">
 
-<h1>Bem-vindo ao Agendaê</h1>
+  <h1>Bem-vindo ao Agendaê</h1>
 
-<p>
-Entre na sua conta ou crie seu cadastro para começar.
-</p>
+  <p>
+    Entre na sua conta ou crie seu cadastro para começar.
+  </p>
 
-<!-- LOGIN -->
-<div id="login">
+  <!-- LOGIN -->
 
-<input
-id="lemail"
-type="email"
-placeholder="Seu e-mail"
->
+  <div id="login">
 
-<input
-id="lpass"
-type="password"
-placeholder="Sua senha"
->
+    <input
+      id="lemail"
+      type="email"
+      placeholder="Seu e-mail"
+      autocomplete="email"
+    >
 
-<button onclick="loginUser()">
-Entrar
-</button>
+    <input
+      id="lpass"
+      type="password"
+      placeholder="Sua senha"
+      autocomplete="current-password"
+    >
 
-<button
-class="link"
-onclick="showSignup()"
->
-Criar minha conta
-</button>
+    <button onclick="login()">
+      Entrar
+    </button>
 
-<div id="lmsg" class="msg"></div>
+    <button class="link" onclick="showSignup()">
+      Criar minha conta
+    </button>
 
-</div>
+    <div id="lmsg" class="msg"></div>
+
+  </div>
 
 
-<!-- CADASTRO -->
-<div id="signup" class="hidden">
+  <!-- CADASTRO -->
 
-<input
-id="name"
-placeholder="Seu nome"
->
+  <div id="signup" class="hidden">
 
-<input
-id="business"
-placeholder="Nome do seu negócio"
->
+    <input
+      id="name"
+      placeholder="Seu nome"
+      autocomplete="name"
+    >
 
-<input
-id="email"
-type="email"
-placeholder="E-mail"
->
+    <input
+      id="business"
+      placeholder="Nome do seu negócio"
+    >
 
-<input
-id="pass"
-type="password"
-placeholder="Senha"
->
+    <input
+      id="email"
+      type="email"
+      placeholder="E-mail"
+      autocomplete="email"
+    >
 
-<button onclick="signupUser()">
-Criar conta
-</button>
+    <input
+      id="pass"
+      type="password"
+      placeholder="Senha"
+      autocomplete="new-password"
+    >
 
-<button
-class="link"
-onclick="showLogin()"
->
-Já tenho uma conta
-</button>
+    <button onclick="signup()">
+      Criar conta
+    </button>
 
-<div id="smsg" class="msg"></div>
+    <button class="link" onclick="showLogin()">
+      Já tenho uma conta
+    </button>
 
-</div>
+    <div id="smsg" class="msg"></div>
+
+  </div>
 
 </section>
 
@@ -205,422 +244,476 @@ Já tenho uma conta
 
 <section id="dashboard" class="hidden">
 
-<div class="top">
+  <div class="top">
 
-<div>
+    <div>
 
-<div class="small">
-Olá,
-</div>
+      <div class="small">
+        Olá,
+      </div>
 
-<h1 id="welcome"></h1>
+      <h1 id="welcome"></h1>
 
-</div>
+    </div>
 
-<button
-class="logout"
-onclick="logoutUser()"
->
-Sair
-</button>
+    <button
+      class="logout"
+      onclick="logout()"
+    >
+      Sair
+    </button>
 
-</div>
+  </div>
 
-
-<p id="biz"></p>
-
-
-<div class="grid">
-
-<div class="tile">
-
-<div class="small">
-Hoje
-</div>
-
-<div class="num">
-0
-</div>
-
-<div class="small">
-agendamentos
-</div>
-
-</div>
+  <p id="biz"></p>
 
 
-<div class="tile">
+  <div class="grid">
 
-<div class="small">
-Clientes
-</div>
+    <div class="tile">
+      <div class="small">Hoje</div>
+      <div class="num">0</div>
+      <div class="small">agendamentos</div>
+    </div>
 
-<div class="num">
-0
-</div>
+    <div class="tile">
+      <div class="small">Clientes</div>
+      <div class="num">0</div>
+      <div class="small">cadastrados</div>
+    </div>
 
-<div class="small">
-cadastrados
-</div>
+    <div class="tile">
+      <div class="small">Serviços</div>
+      <div class="num">0</div>
+      <div class="small">ativos</div>
+    </div>
 
-</div>
+    <div class="tile">
+      <div class="small">Teste grátis</div>
+      <div class="num">7</div>
+      <div class="small">dias iniciais</div>
+    </div>
 
-
-<div class="tile">
-
-<div class="small">
-Serviços
-</div>
-
-<div class="num">
-0
-</div>
-
-<div class="small">
-ativos
-</div>
-
-</div>
+  </div>
 
 
-<div class="tile">
+  <div
+    class="card"
+    style="margin-top:16px"
+  >
 
-<div class="small">
-Teste grátis
-</div>
+    <h2>
+      Próximas etapas
+    </h2>
 
-<div class="num">
-7
-</div>
+    <p>
+      Banco de dados real, agenda em tempo real,
+      clientes, serviços, sinal opcional,
+      pagamentos e assinaturas.
+    </p>
 
-<div class="small">
-dias iniciais
-</div>
+    <button
+      class="secondary"
+      onclick="alert('A agenda será conectada na próxima etapa.')"
+    >
+      Abrir agenda
+    </button>
 
-</div>
-
-</div>
-
-
-<div
-class="card"
-style="margin-top:16px"
->
-
-<h2>
-Próximas etapas
-</h2>
-
-<p>
-Banco de dados real, agenda em tempo real, clientes, serviços, sinal opcional, pagamentos e assinaturas.
-</p>
-
-<button
-class="secondary"
-onclick="alert('A agenda será conectada na próxima etapa.')"
->
-Abrir agenda
-</button>
-
-</div>
+  </div>
 
 </section>
 
 </main>
-
 </div>
 
 
 <script>
 
-/* =========================
-   ARMAZENAMENTO LOCAL
-========================= */
+/* =========================================
+   CONFIGURAÇÃO DO SUPABASE
+   ========================================= */
 
-const storageKey = 'agendae_users_v15';
-
-function getUsers(){
-
-  return JSON.parse(
-    localStorage.getItem(storageKey) || '[]'
-  );
-
-}
-
-function saveUsers(users){
-
-  localStorage.setItem(
-    storageKey,
-    JSON.stringify(users)
-  );
-
-}
+const SUPABASE_URL =
+"https://ncmofygtizzbyhgdtsja.supabase.co";
 
 
-/* =========================
-   TROCAR LOGIN / CADASTRO
-========================= */
+/*
+   COLE AQUI A SUA PUBLISHABLE KEY
+
+   NÃO coloque a Secret key aqui.
+*/
+
+const SUPABASE_KEY =
+"COLE_SUA_PUBLISHABLE_KEY_AQUI";
+
+
+/* Cria conexão com o Supabase */
+
+const supabaseClient =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* =========================================
+   TELAS
+   ========================================= */
 
 function showSignup(){
 
-  const loginBox =
-    document.getElementById('login');
+  document
+    .getElementById("login")
+    .classList
+    .add("hidden");
 
-  const signupBox =
-    document.getElementById('signup');
-
-  loginBox.classList.add('hidden');
-
-  signupBox.classList.remove('hidden');
+  document
+    .getElementById("signup")
+    .classList
+    .remove("hidden");
 
 }
 
 
 function showLogin(){
 
-  const loginBox =
-    document.getElementById('login');
+  document
+    .getElementById("login")
+    .classList
+    .remove("hidden");
 
-  const signupBox =
-    document.getElementById('signup');
-
-  signupBox.classList.add('hidden');
-
-  loginBox.classList.remove('hidden');
+  document
+    .getElementById("signup")
+    .classList
+    .add("hidden");
 
 }
 
 
-/* =========================
+/* =========================================
    MENSAGENS
-========================= */
+   ========================================= */
 
-function showMessage(id,text){
+function msg(id,text,error=false){
 
   const element =
     document.getElementById(id);
 
   element.textContent = text;
 
-  element.style.display = 'block';
+  element.classList.toggle(
+    "error",
+    error
+  );
+
+  element.style.display = "block";
 
 }
 
 
-/* =========================
-   CADASTRO
-========================= */
+/* =========================================
+   CADASTRO REAL
+   ========================================= */
 
-function signupUser(){
+async function signup(){
 
   const name =
-    document.getElementById('name').value.trim();
+    document
+      .getElementById("name")
+      .value
+      .trim();
 
   const business =
-    document.getElementById('business').value.trim();
+    document
+      .getElementById("business")
+      .value
+      .trim();
 
   const email =
-    document.getElementById('email')
-    .value
-    .trim()
-    .toLowerCase();
+    document
+      .getElementById("email")
+      .value
+      .trim()
+      .toLowerCase();
 
-  const pass =
-    document.getElementById('pass').value;
+  const password =
+    document
+      .getElementById("pass")
+      .value;
 
 
   if(
     !name ||
     !business ||
     !email ||
-    !pass
+    !password
   ){
 
-    return showMessage(
-      'smsg',
-      'Preencha todos os campos.'
+    msg(
+      "smsg",
+      "Preencha todos os campos.",
+      true
     );
 
+    return;
   }
 
 
-  const users = getUsers();
+  if(password.length < 6){
 
-
-  if(
-    users.some(
-      user => user.email === email
-    )
-  ){
-
-    return showMessage(
-      'smsg',
-      'Este e-mail já está cadastrado.'
+    msg(
+      "smsg",
+      "A senha precisa ter pelo menos 6 caracteres.",
+      true
     );
 
+    return;
   }
 
 
-  const user = {
-
-    name: name,
-
-    business: business,
-
-    email: email,
-
-    pass: pass
-
-  };
-
-
-  users.push(user);
-
-  saveUsers(users);
-
-
-  sessionStorage.setItem(
-    'agendae_session',
-    email
+  msg(
+    "smsg",
+    "Criando sua conta..."
   );
 
 
-  openDashboard(user);
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signUp({
+
+      email: email,
+
+      password: password,
+
+      options: {
+
+        data: {
+
+          name: name,
+
+          business: business
+
+        }
+
+      }
+
+    });
+
+
+  if(error){
+
+    msg(
+      "smsg",
+      error.message,
+      true
+    );
+
+    return;
+  }
+
+
+  /*
+    Se a confirmação de e-mail
+    estiver ativada no Supabase,
+    o usuário precisará confirmar
+    o e-mail antes de entrar.
+  */
+
+  if(!data.session){
+
+    msg(
+      "smsg",
+      "Cadastro criado! Verifique seu e-mail para confirmar a conta."
+    );
+
+    return;
+  }
+
+
+  openDash(
+    data.user
+  );
 
 }
 
 
-/* =========================
-   LOGIN
-========================= */
+/* =========================================
+   LOGIN REAL
+   ========================================= */
 
-function loginUser(){
+async function login(){
 
   const email =
-    document.getElementById('lemail')
-    .value
-    .trim()
-    .toLowerCase();
+    document
+      .getElementById("lemail")
+      .value
+      .trim()
+      .toLowerCase();
 
   const password =
-    document.getElementById('lpass')
-    .value;
+    document
+      .getElementById("lpass")
+      .value;
 
 
-  const user =
-    getUsers().find(
-      user =>
-        user.email === email &&
-        user.pass === password
+  if(!email || !password){
+
+    msg(
+      "lmsg",
+      "Digite seu e-mail e sua senha.",
+      true
     );
 
-
-  if(!user){
-
-    return showMessage(
-      'lmsg',
-      'E-mail ou senha incorretos.'
-    );
-
+    return;
   }
 
 
-  sessionStorage.setItem(
-    'agendae_session',
-    user.email
+  msg(
+    "lmsg",
+    "Entrando..."
   );
 
 
-  openDashboard(user);
+  const {
+    data,
+    error
+  } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email: email,
+
+      password: password
+
+    });
+
+
+  if(error){
+
+    msg(
+      "lmsg",
+      "E-mail ou senha incorretos.",
+      true
+    );
+
+    return;
+  }
+
+
+  openDash(
+    data.user
+  );
 
 }
 
 
-/* =========================
+/* =========================================
    ABRIR PAINEL
-========================= */
+   ========================================= */
 
-function openDashboard(user){
+function openDash(user){
 
-  const auth =
-    document.getElementById('auth');
+  document
+    .getElementById("auth")
+    .classList
+    .add("hidden");
 
-  const dashboard =
-    document.getElementById('dashboard');
-
-  const welcome =
-    document.getElementById('welcome');
-
-  const business =
-    document.getElementById('biz');
+  document
+    .getElementById("dashboard")
+    .classList
+    .remove("hidden");
 
 
-  auth.classList.add('hidden');
+  const metadata =
+    user.user_metadata || {};
 
-  dashboard.classList.remove('hidden');
 
-  welcome.textContent =
-    user.name;
+  document
+    .getElementById("welcome")
+    .textContent =
+      metadata.name ||
+      user.email ||
+      "Usuário";
 
-  business.textContent =
-    user.business;
+
+  document
+    .getElementById("biz")
+    .textContent =
+      metadata.business ||
+      "Seu negócio";
+
 
 }
 
 
-/* =========================
+/* =========================================
    SAIR
-========================= */
+   ========================================= */
 
-function logoutUser(){
+async function logout(){
 
-  sessionStorage.removeItem(
-    'agendae_session'
-  );
+  await supabaseClient.auth.signOut();
 
+  document
+    .getElementById("dashboard")
+    .classList
+    .add("hidden");
 
-  const dashboard =
-    document.getElementById('dashboard');
-
-  const auth =
-    document.getElementById('auth');
-
-
-  dashboard.classList.add('hidden');
-
-  auth.classList.remove('hidden');
+  document
+    .getElementById("auth")
+    .classList
+    .remove("hidden");
 
   showLogin();
 
 }
 
 
-/* =========================
-   MANTER LOGIN
-========================= */
+/* =========================================
+   VERIFICAR SESSÃO
+   ========================================= */
 
-const savedSession =
-  sessionStorage.getItem(
-    'agendae_session'
-  );
+async function checkSession(){
+
+  const {
+    data
+  } =
+    await supabaseClient.auth.getSession();
 
 
-if(savedSession){
+  if(data.session){
 
-  const user =
-    getUsers().find(
-      user =>
-        user.email === savedSession
+    openDash(
+      data.session.user
     );
-
-
-  if(user){
-
-    openDashboard(user);
 
   }
 
 }
+
+
+/* Executa ao abrir o site */
+
+checkSession();
+
+
+/* Atualiza a tela quando o estado
+   de autenticação mudar */
+
+supabaseClient.auth.onAuthStateChange(
+  (event, session) => {
+
+    if(session){
+
+      openDash(
+        session.user
+      );
+
+    }
+
+  }
+);
 
 </script>
 
