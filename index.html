@@ -63,6 +63,11 @@ input{
   border:1px solid #dfe3ec;
   border-radius:12px;
   font-size:16px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#635bff;
 }
 
 button{
@@ -77,6 +82,10 @@ button{
   margin-top:10px;
 }
 
+button:disabled{
+  opacity:.6;
+}
+
 .secondary{
   background:#eef0ff;
   color:#4d46d8;
@@ -89,7 +98,7 @@ button{
 }
 
 .hidden{
-  display:none;
+  display:none!important;
 }
 
 .top{
@@ -131,7 +140,7 @@ button{
 
 .msg{
   margin-top:12px;
-  padding:10px;
+  padding:12px;
   border-radius:10px;
   background:#eef8f1;
   color:#18733b;
@@ -142,6 +151,12 @@ button{
   background:#fff0f0;
   color:#b42318;
 }
+
+.loading{
+  text-align:center;
+  padding:20px;
+  color:#687083;
+}
 </style>
 </head>
 
@@ -149,9 +164,7 @@ button{
 
 <div class="app">
 
-<header>
-  Agendaê
-</header>
+<header>Agendaê</header>
 
 <main>
 
@@ -159,83 +172,83 @@ button{
 
 <section id="auth" class="card">
 
-  <h1>Bem-vindo ao Agendaê</h1>
+<h1>Bem-vindo ao Agendaê</h1>
 
-  <p>
-    Entre na sua conta ou crie seu cadastro para começar.
-  </p>
+<p>
+Entre na sua conta ou crie seu cadastro para começar.
+</p>
 
-  <!-- LOGIN -->
+<!-- LOGIN -->
 
-  <div id="login">
+<div id="login">
 
-    <input
-      id="lemail"
-      type="email"
-      placeholder="Seu e-mail"
-      autocomplete="email"
-    >
+<input
+id="lemail"
+type="email"
+placeholder="Seu e-mail"
+autocomplete="email"
+>
 
-    <input
-      id="lpass"
-      type="password"
-      placeholder="Sua senha"
-      autocomplete="current-password"
-    >
+<input
+id="lpass"
+type="password"
+placeholder="Sua senha"
+autocomplete="current-password"
+>
 
-    <button onclick="login()">
-      Entrar
-    </button>
+<button id="loginBtn" onclick="login()">
+Entrar
+</button>
 
-    <button class="link" onclick="showSignup()">
-      Criar minha conta
-    </button>
+<button class="link" onclick="showSignup()">
+Criar minha conta
+</button>
 
-    <div id="lmsg" class="msg"></div>
+<div id="lmsg" class="msg"></div>
 
-  </div>
+</div>
 
 
-  <!-- CADASTRO -->
+<!-- CADASTRO -->
 
-  <div id="signup" class="hidden">
+<div id="signup" class="hidden">
 
-    <input
-      id="name"
-      placeholder="Seu nome"
-      autocomplete="name"
-    >
+<input
+id="name"
+placeholder="Seu nome"
+autocomplete="name"
+>
 
-    <input
-      id="business"
-      placeholder="Nome do seu negócio"
-    >
+<input
+id="business"
+placeholder="Nome do seu negócio"
+>
 
-    <input
-      id="email"
-      type="email"
-      placeholder="E-mail"
-      autocomplete="email"
-    >
+<input
+id="email"
+type="email"
+placeholder="E-mail"
+autocomplete="email"
+>
 
-    <input
-      id="pass"
-      type="password"
-      placeholder="Senha"
-      autocomplete="new-password"
-    >
+<input
+id="pass"
+type="password"
+placeholder="Senha"
+autocomplete="new-password"
+>
 
-    <button onclick="signup()">
-      Criar conta
-    </button>
+<button id="signupBtn" onclick="signup()">
+Criar conta
+</button>
 
-    <button class="link" onclick="showLogin()">
-      Já tenho uma conta
-    </button>
+<button class="link" onclick="showLogin()">
+Já tenho uma conta
+</button>
 
-    <div id="smsg" class="msg"></div>
+<div id="smsg" class="msg"></div>
 
-  </div>
+</div>
 
 </section>
 
@@ -244,476 +257,490 @@ button{
 
 <section id="dashboard" class="hidden">
 
-  <div class="top">
+<div class="top">
 
-    <div>
+<div>
+<div class="small">Olá,</div>
+<h1 id="welcome"></h1>
+</div>
 
-      <div class="small">
-        Olá,
-      </div>
+<button class="logout" onclick="logout()">
+Sair
+</button>
 
-      <h1 id="welcome"></h1>
+</div>
 
-    </div>
-
-    <button
-      class="logout"
-      onclick="logout()"
-    >
-      Sair
-    </button>
-
-  </div>
-
-  <p id="biz"></p>
+<p id="biz"></p>
 
 
-  <div class="grid">
+<div class="grid">
 
-    <div class="tile">
-      <div class="small">Hoje</div>
-      <div class="num">0</div>
-      <div class="small">agendamentos</div>
-    </div>
+<div class="tile">
+<div class="small">Hoje</div>
+<div class="num">0</div>
+<div class="small">agendamentos</div>
+</div>
 
-    <div class="tile">
-      <div class="small">Clientes</div>
-      <div class="num">0</div>
-      <div class="small">cadastrados</div>
-    </div>
+<div class="tile">
+<div class="small">Clientes</div>
+<div class="num">0</div>
+<div class="small">cadastrados</div>
+</div>
 
-    <div class="tile">
-      <div class="small">Serviços</div>
-      <div class="num">0</div>
-      <div class="small">ativos</div>
-    </div>
+<div class="tile">
+<div class="small">Serviços</div>
+<div class="num">0</div>
+<div class="small">ativos</div>
+</div>
 
-    <div class="tile">
-      <div class="small">Teste grátis</div>
-      <div class="num">7</div>
-      <div class="small">dias iniciais</div>
-    </div>
+<div class="tile">
+<div class="small">Teste grátis</div>
+<div class="num">7</div>
+<div class="small">dias iniciais</div>
+</div>
 
-  </div>
+</div>
 
 
-  <div
-    class="card"
-    style="margin-top:16px"
-  >
+<div class="card" style="margin-top:16px">
 
-    <h2>
-      Próximas etapas
-    </h2>
+<h2>Próximas etapas</h2>
 
-    <p>
-      Banco de dados real, agenda em tempo real,
-      clientes, serviços, sinal opcional,
-      pagamentos e assinaturas.
-    </p>
+<p>
+Banco de dados, agenda em tempo real,
+clientes, serviços, sinal opcional,
+pagamentos, assinaturas e lembretes.
+</p>
 
-    <button
-      class="secondary"
-      onclick="alert('A agenda será conectada na próxima etapa.')"
-    >
-      Abrir agenda
-    </button>
+<button
+class="secondary"
+onclick="alert('A agenda será conectada na próxima etapa.')"
+>
+Abrir agenda
+</button>
 
-  </div>
+</div>
 
 </section>
 
+
+<div id="loading" class="loading hidden">
+Carregando...
+</div>
+
 </main>
+
 </div>
 
 
 <script>
 
-/* =========================================
+/* ================================
    CONFIGURAÇÃO DO SUPABASE
-   ========================================= */
+================================ */
 
 const SUPABASE_URL =
 "https://ncmofygtizzbyhgdtsja.supabase.co";
 
-
-/*
-   COLE AQUI A SUA PUBLISHABLE KEY
-
-   NÃO coloque a Secret key aqui.
-*/
-
 const SUPABASE_KEY =
-"sb_publishable_b2OtnFe5ptHHL2pByekItQ_fRC8KEXe";
+"sb_publishable_b20tnFe5ptHHL2pByekItQ_";
 
 
-/* Cria conexão com o Supabase */
+/* ================================
+   CONEXÃO
+================================ */
 
 const supabaseClient =
 supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
+SUPABASE_URL,
+SUPABASE_KEY
 );
 
 
-/* =========================================
-   TELAS
-   ========================================= */
+/* ================================
+   ELEMENTOS
+================================ */
 
-function showSignup(){
+const auth =
+document.getElementById("auth");
 
-  document
-    .getElementById("login")
-    .classList
-    .add("hidden");
+const loginBox =
+document.getElementById("login");
 
-  document
-    .getElementById("signup")
-    .classList
-    .remove("hidden");
+const signupBox =
+document.getElementById("signup");
 
-}
+const dashboard =
+document.getElementById("dashboard");
 
-
-function showLogin(){
-
-  document
-    .getElementById("login")
-    .classList
-    .remove("hidden");
-
-  document
-    .getElementById("signup")
-    .classList
-    .add("hidden");
-
-}
+const loading =
+document.getElementById("loading");
 
 
-/* =========================================
+/* ================================
    MENSAGENS
-   ========================================= */
+================================ */
 
 function msg(id,text,error=false){
 
-  const element =
-    document.getElementById(id);
+const element =
+document.getElementById(id);
 
-  element.textContent = text;
+element.textContent = text;
 
-  element.classList.toggle(
-    "error",
-    error
-  );
+element.classList.toggle("error",error);
 
-  element.style.display = "block";
+element.style.display="block";
 
 }
 
 
-/* =========================================
-   CADASTRO REAL
-   ========================================= */
+/* ================================
+   MOSTRAR CADASTRO
+================================ */
+
+function showSignup(){
+
+loginBox.classList.add("hidden");
+
+signupBox.classList.remove("hidden");
+
+document.getElementById("lmsg").style.display="none";
+
+}
+
+
+/* ================================
+   MOSTRAR LOGIN
+================================ */
+
+function showLogin(){
+
+signupBox.classList.add("hidden");
+
+loginBox.classList.remove("hidden");
+
+document.getElementById("smsg").style.display="none";
+
+}
+
+
+/* ================================
+   CADASTRO
+================================ */
 
 async function signup(){
 
-  const name =
-    document
-      .getElementById("name")
-      .value
-      .trim();
+const name =
+document.getElementById("name").value.trim();
 
-  const business =
-    document
-      .getElementById("business")
-      .value
-      .trim();
+const business =
+document.getElementById("business").value.trim();
 
-  const email =
-    document
-      .getElementById("email")
-      .value
-      .trim()
-      .toLowerCase();
+const email =
+document.getElementById("email").value.trim();
 
-  const password =
-    document
-      .getElementById("pass")
-      .value;
+const password =
+document.getElementById("pass").value;
 
 
-  if(
-    !name ||
-    !business ||
-    !email ||
-    !password
-  ){
+if(!name || !business || !email || !password){
 
-    msg(
-      "smsg",
-      "Preencha todos os campos.",
-      true
-    );
+msg(
+"smsg",
+"Preencha todos os campos.",
+true
+);
 
-    return;
-  }
-
-
-  if(password.length < 6){
-
-    msg(
-      "smsg",
-      "A senha precisa ter pelo menos 6 caracteres.",
-      true
-    );
-
-    return;
-  }
-
-
-  msg(
-    "smsg",
-    "Criando sua conta..."
-  );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.signUp({
-
-      email: email,
-
-      password: password,
-
-      options: {
-
-        data: {
-
-          name: name,
-
-          business: business
-
-        }
-
-      }
-
-    });
-
-
-  if(error){
-
-    msg(
-      "smsg",
-      error.message,
-      true
-    );
-
-    return;
-  }
-
-
-  /*
-    Se a confirmação de e-mail
-    estiver ativada no Supabase,
-    o usuário precisará confirmar
-    o e-mail antes de entrar.
-  */
-
-  if(!data.session){
-
-    msg(
-      "smsg",
-      "Cadastro criado! Verifique seu e-mail para confirmar a conta."
-    );
-
-    return;
-  }
-
-
-  openDash(
-    data.user
-  );
+return;
 
 }
 
 
-/* =========================================
-   LOGIN REAL
-   ========================================= */
+if(password.length < 6){
+
+msg(
+"smsg",
+"A senha precisa ter pelo menos 6 caracteres.",
+true
+);
+
+return;
+
+}
+
+
+const button =
+document.getElementById("signupBtn");
+
+button.disabled=true;
+
+button.textContent="Criando conta...";
+
+
+try{
+
+const {data,error} =
+await supabaseClient.auth.signUp({
+
+email:email,
+
+password:password,
+
+options:{
+data:{
+name:name,
+business:business
+}
+}
+
+});
+
+
+if(error){
+
+msg(
+"smsg",
+error.message,
+true
+);
+
+button.disabled=false;
+
+button.textContent="Criar conta";
+
+return;
+
+}
+
+
+/*
+Se a confirmação de e-mail estiver
+ativada no Supabase, o usuário
+precisará confirmar o e-mail.
+*/
+
+if(data.session){
+
+openDashboard(data.user);
+
+}else{
+
+msg(
+"smsg",
+"Conta criada! Verifique seu e-mail para confirmar a conta e depois entre no Agendaê."
+);
+
+showLogin();
+
+}
+
+}catch(error){
+
+msg(
+"smsg",
+"Não foi possível criar a conta.",
+true
+);
+
+}
+
+button.disabled=false;
+
+button.textContent="Criar conta";
+
+}
+
+
+/* ================================
+   LOGIN
+================================ */
 
 async function login(){
 
-  const email =
-    document
-      .getElementById("lemail")
-      .value
-      .trim()
-      .toLowerCase();
+const email =
+document.getElementById("lemail").value.trim();
 
-  const password =
-    document
-      .getElementById("lpass")
-      .value;
+const password =
+document.getElementById("lpass").value;
 
 
-  if(!email || !password){
+if(!email || !password){
 
-    msg(
-      "lmsg",
-      "Digite seu e-mail e sua senha.",
-      true
-    );
+msg(
+"lmsg",
+"Digite seu e-mail e sua senha.",
+true
+);
 
-    return;
-  }
-
-
-  msg(
-    "lmsg",
-    "Entrando..."
-  );
-
-
-  const {
-    data,
-    error
-  } =
-    await supabaseClient.auth.signInWithPassword({
-
-      email: email,
-
-      password: password
-
-    });
-
-
-  if(error){
-
-    msg(
-      "lmsg",
-      "E-mail ou senha incorretos.",
-      true
-    );
-
-    return;
-  }
-
-
-  openDash(
-    data.user
-  );
+return;
 
 }
 
 
-/* =========================================
+const button =
+document.getElementById("loginBtn");
+
+button.disabled=true;
+
+button.textContent="Entrando...";
+
+
+try{
+
+const {data,error} =
+await supabaseClient.auth.signInWithPassword({
+
+email:email,
+
+password:password
+
+});
+
+
+if(error){
+
+msg(
+"lmsg",
+"Não foi possível entrar. Verifique seu e-mail e senha.",
+true
+);
+
+button.disabled=false;
+
+button.textContent="Entrar";
+
+return;
+
+}
+
+
+openDashboard(data.user);
+
+
+}catch(error){
+
+msg(
+"lmsg",
+"Erro ao conectar ao servidor.",
+true
+);
+
+}
+
+
+button.disabled=false;
+
+button.textContent="Entrar";
+
+}
+
+
+/* ================================
    ABRIR PAINEL
-   ========================================= */
+================================ */
 
-function openDash(user){
+function openDashboard(user){
 
-  document
-    .getElementById("auth")
-    .classList
-    .add("hidden");
-
-  document
-    .getElementById("dashboard")
-    .classList
-    .remove("hidden");
+if(!user)return;
 
 
-  const metadata =
-    user.user_metadata || {};
+const metadata =
+user.user_metadata || {};
 
 
-  document
-    .getElementById("welcome")
-    .textContent =
-      metadata.name ||
-      user.email ||
-      "Usuário";
+const name =
+metadata.name || "usuário";
+
+const business =
+metadata.business || "Seu negócio";
 
 
-  document
-    .getElementById("biz")
-    .textContent =
-      metadata.business ||
-      "Seu negócio";
+document.getElementById("welcome")
+.textContent=name;
 
+document.getElementById("biz")
+.textContent=business;
+
+
+auth.classList.add("hidden");
+
+dashboard.classList.remove("hidden");
+
+loading.classList.add("hidden");
 
 }
 
 
-/* =========================================
+/* ================================
    SAIR
-   ========================================= */
+================================ */
 
 async function logout(){
 
-  await supabaseClient.auth.signOut();
+await supabaseClient.auth.signOut();
 
-  document
-    .getElementById("dashboard")
-    .classList
-    .add("hidden");
+dashboard.classList.add("hidden");
 
-  document
-    .getElementById("auth")
-    .classList
-    .remove("hidden");
+auth.classList.remove("hidden");
 
-  showLogin();
+showLogin();
+
+document.getElementById("lemail").value="";
+
+document.getElementById("lpass").value="";
 
 }
 
 
-/* =========================================
+/* ================================
    VERIFICAR SESSÃO
-   ========================================= */
+================================ */
 
 async function checkSession(){
 
-  const {
-    data
-  } =
-    await supabaseClient.auth.getSession();
+loading.classList.remove("hidden");
+
+const {
+data
+} =
+await supabaseClient.auth.getSession();
 
 
-  if(data.session){
+loading.classList.add("hidden");
 
-    openDash(
-      data.session.user
-    );
 
-  }
+if(data.session){
+
+openDashboard(data.session.user);
+
+}
 
 }
 
 
-/* Executa ao abrir o site */
-
-checkSession();
-
-
-/* Atualiza a tela quando o estado
-   de autenticação mudar */
+/* ================================
+   MONITORAR LOGIN
+================================ */
 
 supabaseClient.auth.onAuthStateChange(
-  (event, session) => {
+(event,session)=>{
 
-    if(session){
+if(session){
 
-      openDash(
-        session.user
-      );
+openDashboard(session.user);
 
-    }
+}
 
-  }
+}
 );
+
+
+/* ================================
+   INICIAR
+================================ */
+
+checkSession();
 
 </script>
 
